@@ -1,0 +1,311 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  background: var(--primary);
+  color: #fff;
+  padding: 2rem;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.25rem;
+}
+
+.header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.main {
+  flex: 1;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* --- Form --- */
+
+.form {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form h2 {
+  margin-bottom: 0.5rem;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form input,
+.form select {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.row label {
+  flex: 1;
+}
+
+.checkbox {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.5rem !important;
+}
+
+.checkbox input {
+  width: 18px;
+  height: 18px;
+}
+
+.form button {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.form button:hover {
+  background: var(--primary-dark);
+}
+
+.form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* --- Error --- */
+
+.error {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fdecea;
+  color: var(--danger);
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* --- Results --- */
+
+.results {
+  margin-top: 2rem;
+}
+
+.results h2 {
+  margin-bottom: 1.5rem;
+}
+
+.weatherCard {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.weatherCard h3 {
+  margin-bottom: 1rem;
+}
+
+.weatherGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  text-align: center;
+}
+
+.weatherGrid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.weatherValue {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.weatherGrid > div > span:last-child {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* --- Overall section --- */
+
+.overallSection {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gaugeCircle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 8px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gaugeValue {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.gaugeLabel {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.energyWaste {
+  flex: 1;
+}
+
+.energyWaste h3 {
+  margin-bottom: 0.5rem;
+}
+
+.energyValue {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--danger);
+}
+
+.energyWaste p {
+  margin-top: 0.4rem;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.uValue {
+  font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace;
+  font-size: 0.85rem !important;
+}
+
+/* --- Score cards --- */
+
+.scoreGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.scoreCard {
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.scoreCard h3 {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.scoreValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.scoreCard p {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+/* --- Interpretation --- */
+
+.interpretation {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.interpretation h3 {
+  margin-bottom: 0.75rem;
+}
+
+.interpretation ul {
+  padding-left: 1.25rem;
+}
+
+.interpretation li {
+  margin-bottom: 0.4rem;
+  line-height: 1.5;
+}
+
+.sensorNote {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #999;
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 640px) {
+  .weatherGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .scoreGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .overallSection {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+}

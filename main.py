@@ -1,42 +1,83 @@
 
-#OIC project - August 2026
-#Title - Live Window Efficiency Score Calculator
-#Code to calculate the live window efficiency score based on the following parameters: area, internal, ambient and outdoor temperature, humidity, wind conditions, solar radiation and heat transferered 
+import os
 
-import time as dt
-import requests
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 
+from calculations import generate_mock_sensor_data, run_full_assessment
+from weather_service import WeatherAPIError, fetch_weather_by_postcode
 
-#intro and explanation to the user
-print("Welcome to WESH, the Live Window Efficiency Score Calculator!")
-print("This program will give you a better insight into your the thermal efficiency of your windows based on live parameters - and will help you to save money in the long run! Let's get started!")
+load_dotenv()
 
-#user input section
-name = input("Please enter your name: ") 
-postcode = input("Please enter your Postcode: ")
-propertyType = input("What kind of property is this for? (Please type 'house', 'flat' or 'business'): ")
+API_KEY = os.getenv("WEATHER_API_KEY", "")
 
+app = FastAPI(title="WESH — Live Window Efficiency Score Calculator")
 
-windowType = input("What type of window do you have? (Please type 'single-glazed', 'double-glazed', 'triple-glazed' or 'idk'): ")
-windowHeight = float(input("Please enter your window height (in meters): "))
-windowWidth = float(input("Please enter your window width (in meters): "))
-
-ans= input("Have you installed the WESH sensor? (Please type 'yes' or 'no'): ")
-
-area = windowHeight * windowWidth
-
-if ans == "no":
-    print ("Please install the WESH sensor to access live data and calculate your live window efficiency score! WESH")
-else: 
-    print ("Great! Let's continue getting you set up :)")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-#weather API integration
-BASE_URL = "https://openweathermap.org/data/2.5/weather?"
-API_KEY = open('api_key','r').read()    
-CITY = postcode
+class CalculateRequest(BaseModel):
+    name: str
+    postcode: str
+    property_type: str = Field(pattern=r"^(house|flat|business)$")
+    window_type: str = Field(pattern=r"^(single-glazed|double-glazed|triple-glazed|idk)$")
+    window_height: float = Field(gt=0)
+    window_width: float = Field(gt=0)
+    has_sensor: bool = False
 
-URL = BASE_URL + "appid=" + API_KEY + "&q=" + CITY
 
-response = requests.get(URL).json()
-print(response)
+@app.get("/api/health")
+def health():
+    return {"status": "ok"}
+
+
+@app.get("/api/weather/{postcode}")
+def get_weather(postcode: str):
+    if not API_KEY:
+        raise HTTPException(status_code=500, detail="WEATHER_API_KEY not configured")
+    try:
+        return fetch_weather_by_postcode(postcode, API_KEY)
+    except WeatherAPIError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
+
+@app.post("/api/calculate")
+def calculate(req: CalculateRequest):
+    if not API_KEY:
+        raise HTTPException(status_code=500, detail="WEATHER_API_KEY not configured")
+
+    try:
+        weather = fetch_weather_by_postcode(req.postcode, API_KEY)
+    except WeatherAPIError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
+    sensor = generate_mock_sensor_data()
+    area = req.window_height * req.window_width
+
+    results = run_full_assessment(
+        temp_outside=weather["temp_outside"],
+        wind_speed_ms=weather["wind_speed"],
+        humidity=weather["humidity"],
+        temp_glass=sensor["temp_glass"],
+        temp_amb=sensor["temp_amb"],
+        air_sensor=sensor["air_sensor"],
+        window_area=area,
+    )
+
+    return {
+        "user": req.name,
+        "postcode": req.postcode,
+        "property_type": req.property_type,
+        "window_type": req.window_type,
+        "window_area_m2": round(area, 2),
+        "weather": weather,
+        "sensor_data": sensor,
+        "results": results,
+    }

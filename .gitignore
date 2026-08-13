@@ -1,0 +1,16 @@
+# Environment variables
+.env
+api_key
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Node / Next.js
+node_modules/
+.next/
+frontend/.next/
+frontend/node_modules/
